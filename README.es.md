@@ -1,73 +1,85 @@
-# Plantilla WebApp con React JS
+# Lista de Contactos en React — Multiusuario con CRUD de Contactos
 
-> 🎥 Esta plantilla [cuenta con un video tutorial](https://youtu.be/9blWKQTJ1FA), para verlo haz clic aquí.
+Este proyecto es una aplicación de **gestión de contactos por usuario** desarrollada con **React**, donde puedes seleccionar un usuario existente o crear uno nuevo automáticamente, y luego añadir, editar, eliminar o visualizar contactos asociados a ese usuario.
 
-Utilizada por [4Geeks.com](https://4geeks.com/) y los estudiantes de [4Geeks Academy](https://4geeksacademy.com/), esta plantilla ayuda a iniciar tus primeras aplicaciones web multi-página integrándose con la última versión de React, React-Router, despliegues en Vercel y [Vite](https://4geeks.com/es/lesson/introduccion-a-vite-como-empaquetador-de-modulos) para el empaquetado.
+---
 
-### Empezando:
+## Detalles importantes
 
-> 📦 Asegúrate de usar al menos la versión 20 de Node.
+- Toda la aplicación se renderiza dinámicamente mediante **componentes de React**.
+- Se utiliza **`useState`** y un **reducer global** (`useGlobalReducer`) para gestionar:
+  - Usuario activo.
+  - Lista de contactos del usuario.
+  - Mensajes de estado y errores.
+  - Datos temporales para edición de contactos.
+- La aplicación se conecta con una **API REST** que crea automáticamente una nueva agenda si el usuario ingresado no existe.
+- El diseño utiliza **CSS personalizado**, con estilo oscuro y bordes en color salmón.
 
-1. Instala las dependencias del paquete node escribiendo: `$ npm install`
+---
 
-2. Crea un archivo .env basado en el .env.example escribiendo `$ cp .env.example .env`
+## Funcionalidades principales
 
-3. ¡Comienza a programar! y el servidor de desarrollo de vite con recarga en vivo escribiendo: `$ npm run start`
+### 1. Seleccionar o crear usuario
+- Al iniciar, se solicita el **nombre del usuario**.
+- Si el nombre **existe**, se carga su agenda de contactos.
+- Si el nombre **no existe**, se crea automáticamente una nueva agenda para ese usuario.
+- Se muestran mensajes temporales confirmando si el usuario fue creado o si no se ingresó ningún nombre.
 
-### Estilos
+### 2. Añadir contactos
+- El usuario puede completar un formulario con:
+  - Nombre
+  - Teléfono
+  - Dirección
+  - Email
+- Al añadir un contacto:
+  - Se agrega a la agenda del usuario activo.
+  - El formulario se limpia automáticamente.
+  - Si algún campo está vacío, se muestra un mensaje temporal de error.
 
-Puedes actualizar el archivo `./index.css` o crear nuevos archivos `.css` e importarlos en tus archivos css o js actuales según tus necesidades.
+### 3. Editar contactos
+- Cada contacto incluye un botón **"Editar"** que carga sus datos en el formulario.
+- Al enviar la edición:
+  - Se actualiza el contacto en la lista.
+  - Se muestra un mensaje de confirmación temporal.
 
-### Componentes
+### 4. Eliminar contactos individuales
+- Cada contacto tiene un botón **"Borrar"**.
+- Al borrar un contacto:
+  - Se elimina de la lista del usuario activo.
+  - Aparece un mensaje temporal confirmando la eliminación.
 
-Agrega más archivos en tu carpeta `./src/components` según los necesites e impórtalos en tus paginas actuales según sea necesario.
+### 5. Ver detalles de un contacto
+- Al hacer clic en un contacto se abre un **panel de detalles**:
+  - Imagen aleatoria asociada al ID del contacto.
+  - Información completa: nombre, email, teléfono y dirección.
+  - Botones para **editar** o **borrar** desde el panel.
 
-### Páginas
+### 6. Mensajes de estado
+- Aparecen mensajes temporales al crear usuario, añadir, editar o borrar contactos.
+- Ejemplos:
+  - `noUser` → usuario no ingresado.
+  - `notFound` → usuario no encontrado (se crea automáticamente).
+  - `contactCreated`, `contactUpdated`, `contactDeleted` → acciones sobre contactos.
+- Los mensajes desaparecen automáticamente tras unos segundos.
 
-Agrega más archivos en tu carpeta `./js/pages` e impórtalos en `./routes.jsx`.
-Cada página debe coincidir con al menos una ruta dentro de `routes.jsx`
+---
 
-### Almacenamiento Centralizado con useReducer
+## Cómo usar la aplicación
 
-Esta plantilla viene con un estado general y centralizado que se comparte con todas las páginas y componentes, lo llamamos "store".
+1. Ingresa tu **nombre de usuario**:
+   - Si existe, carga su agenda.
+   - Si no existe, se crea automáticamente.
+2. Visualiza la lista de contactos de ese usuario.
+3. Añade un contacto completando el formulario y pulsando **Enviar**.
+4. Edita un contacto usando el botón **Editar**.
+5. Borra un contacto con el botón **Borrar**.
+6. Haz clic en un contacto para ver sus **detalles completos**.
 
-El archivo `./src/store.js` tiene una estructura predeterminada para el store, te animamos a cambiarla y adaptarla a tus necesidades de datos (por ejemplo, si estás haciendo una `Lista de tareas` probablemente tendrás un arreglo de tareas aquí).
+---
 
-💡Nota: Hay un ejemplo usando el store y dispatcher de useReducer en el archivo `pages/demo.js`;
+## Posibles mejoras 
 
-+ Entiende [como funciona el `useReducer`](https://4geeks.com/es/lesson/que-es-usereducer-react)
-+ Lee más sobre [implementar un estado global con API de Contexto](https://4geeks.com/es/lesson/context-api-es)
-+ Lee más sobre [hooks de react](https://4geeks.com/es/lesson/react-hooks-explained-es)
-
-El `Proveedor` del store para este contexto ya está configurado en `./src/main.jsx`. Puedes acceder al store desde cualquier componente usando el hook `useGlobalReducer` para obtener el `store` y el `despachador`. Consulta `/views/demo.js` para ver una demostración. Aquí tienes un ejemplo más pequeño:
-
-```jsx
-import useGlobalReducer from "./src/hooks/useGlobalReducer";
-
-const MyComponentSuper = () => {
-  //aquí usas el hook para obtener el despachador y el almacén
-  import { dispatch, store } = useGlobalReducer();
-
-  return <div>{/* puedes usar tus acciones o el almacén dentro del html */}</div>
-}
-```
-
-## ¡Publica tu sitio web!
-
-1. **Vercel:** El proveedor de alojamiento GRATUITO recomendado es [vercel.com](https://vercel.com/), puedes desplegar en 1 minuto escribiendo los siguientes 2 comandos:
-
-Iniciar sesión (necesitas tener una cuenta):
-```sh
-$ npm i vercel -g && vercel login
-```
-Desplegar:
-```sh
-$ vercel --prod
-```
-✎ Nota: Si no tienes una cuenta, simplemente ve a vercel.com, crea una cuenta y regresa aquí.
-
-![Procedimiento de ejemplo de Vercel para desplegar](https://github.com/4GeeksAcademy/react-hello-webapp/blob/4b530ba091a981d3916cc6e960e370decaf2e234/docs/deploy.png?raw=true)
-
-## Contribuidores
-
-Esta plantilla fue construida como parte del [Coding Bootcamp](https://4geeksacademy.com/us/coding-bootcamp) de 4Geeks Academy por [Alejandro Sanchez](https://twitter.com/alesanchezr) y muchos otros contribuidores. Descubre más sobre nuestro [Curso de Desarrollador Full Stack](https://4geeksacademy.com/us/coding-bootcamps/part-time-full-stack-developer), [Curso de data-science](https://4geeksacademy.com/es/coding-bootcamps/curso-datascience-machine-learning) y [Curso de Ciberseguridad](https://4geeksacademy.com/es/coding-bootcamps/curso-ciberseguridad).
+- Añadir búsqueda y filtros dentro de la agenda.
+- Añadir paginación para evitar muchos contactos en pantalla.
+- Posibilidad de subir fotos personalizadas para cada contacto.
+- Añadir annimaciones.
